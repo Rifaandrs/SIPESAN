@@ -9,7 +9,7 @@
   <title>@yield('title', 'Dashboard') - SIPESAN</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.ico') }}">
+  <link rel="icon" type="image/png" href="{{ asset('assets/images/smpn-2-purwakarta-logo.png') }}">
 
   <!-- Local Third-Party Libraries -->
   <link rel="stylesheet" href="{{ asset('assets/libs/bootstrap/css/bootstrap.min.css') }}">
