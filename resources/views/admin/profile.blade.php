@@ -42,14 +42,10 @@
                 <div>
                     <h5 class="fw-bold mb-1">{{ $user->name }}</h5>
                     @if($user->photo)
-                        <form action="{{ route('admin.profile.photo.destroy') }}" method="POST" class="mt-2"
-                            onsubmit="return confirm('Apa anda yakin ingin menghapus foto profil ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                <i class="bi bi-trash me-1"></i> Hapus Foto Profil
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2"
+                            data-bs-toggle="modal" data-bs-target="#deleteProfilePhotoModal">
+                            <i class="bi bi-trash me-1"></i> Hapus Foto Profil
+                        </button>
                     @else
                         <span class="small text-muted">Belum ada foto profil</span>
                     @endif
@@ -125,6 +121,33 @@
 
     </div>
 </div>
+
+@if($user->photo)
+<div class="modal fade" id="deleteProfilePhotoModal" tabindex="-1"
+    aria-labelledby="deleteProfilePhotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content profile-photo-modal rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="deleteProfilePhotoModalLabel">Hapus Foto Profil?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Apa Anda yakin ingin menghapus foto profil ini?</p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                <form action="{{ route('admin.profile.photo.destroy') }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i> Hapus Foto
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
 
 @push('scripts')

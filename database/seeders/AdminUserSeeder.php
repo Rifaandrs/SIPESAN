@@ -17,16 +17,10 @@ class AdminUserSeeder extends Seeder
             throw new RuntimeException('Set SIPESAN_ADMIN_PASSWORD before creating the initial admin account in production.');
         }
 
-        // Pindahkan email admin@ lama jika masih digunakan oleh Wakasek Humas
-        User::where('email', 'admin@sipesan.local')
-            ->where('name', 'Wakasek Humas SMPN 2 Purwakarta')
-            ->update(['email' => 'wakasek@sipesan.local']);
-
         // Akun Utama Wakasek Humas
         User::updateOrCreate(
             ['name' => 'Wakasek Humas SMPN 2 Purwakarta'],
             [
-                'email' => 'wakasek@sipesan.local',
                 'password' => Hash::make($password ?: 'SipesanAdmin!2026'),
                 'role' => 'admin',
             ]
@@ -36,7 +30,6 @@ class AdminUserSeeder extends Seeder
         User::updateOrCreate(
             ['name' => 'Humas Spenda'],
             [
-                'email' => 'humasspenda@sipesan.local',
                 'password' => Hash::make('Smpn2Pwk2026'),
                 'role' => 'admin',
             ]
@@ -46,7 +39,6 @@ class AdminUserSeeder extends Seeder
         User::updateOrCreate(
             ['name' => 'Admin'],
             [
-                'email' => 'admin@sipesan.local',
                 'password' => Hash::make('Admin123'),
                 'role' => 'admin',
             ]
@@ -56,8 +48,7 @@ class AdminUserSeeder extends Seeder
         User::updateOrCreate(
             ['name' => 'Admin 2'],
             [
-                'email' => 'admin2@sipesan.local',
-                'password' => Hash::make('admiN321'),
+                'password' => Hash::make('admin321'),
                 'role' => 'admin',
             ]
         );

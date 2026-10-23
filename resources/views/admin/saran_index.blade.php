@@ -41,6 +41,7 @@
         <label class="form-label small fw-semibold">Status</label>
         <select name="status" class="form-select">
           <option value="">Semua Status</option>
+          <option value="Diproses" {{ request('status') == 'Diproses' ? 'selected' : '' }}>Diproses</option>
           <option value="Baru" {{ request('status') == 'Baru' ? 'selected' : '' }}>Baru</option>
           <option value="Diterima" {{ request('status') == 'Diterima' ? 'selected' : '' }}>Diterima</option>
           <option value="Sedang Diverifikasi" {{ request('status') == 'Sedang Diverifikasi' ? 'selected' : '' }}>Sedang Diverifikasi</option>

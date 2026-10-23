@@ -16,6 +16,18 @@
     overflow: hidden;
   }
 
+  .home-statistics {
+    padding-bottom: 0.5rem !important;
+  }
+
+  #features.section-pad {
+    padding-top: 3rem;
+  }
+
+  .home-content-section.section-pad {
+    padding-block: 3.5rem;
+  }
+
   .hero-poster-wrapper {
     position: relative;
     padding: 10px 15px 10px 0;
@@ -129,6 +141,16 @@
     }
   }
 
+  @media (max-width: 767.98px) {
+    #features.section-pad {
+      padding-top: 2rem;
+    }
+
+    .home-content-section.section-pad {
+      padding-block: 2.5rem;
+    }
+  }
+
   /* Tombol Aksi Hero: Putih Bersih di Awal, Berubah Biru Saat di-Hover */
   .btn-hw-white-hover {
     background-color: #ffffff;
@@ -229,11 +251,11 @@
   </div>
 </header>
 
-<section class="py-5" style="background: var(--clr-bg);" id="statistik" aria-labelledby="saran-statistics-title">
+<section class="home-statistics py-5" style="background: var(--clr-bg);" id="statistik" aria-label="Statistik saran">
   <div class="container">
     
     <!-- 4 Kartu Ringkasan Statistik Status Sesuai Data Tercatat -->
-    <div class="row g-3 g-md-4 mb-4" data-aos="fade-up">
+    <div class="row g-3 g-md-4" data-aos="fade-up">
       <div class="col-6 col-lg-3">
         <div class="card border-0 rounded-4 shadow-sm p-3 p-md-4 h-100 bg-white" style="border-left: 4px solid #2563eb !important;">
           <div class="d-flex align-items-center justify-content-between mb-2">
@@ -286,75 +308,13 @@
         </div>
       </div>
     </div>
-    @php
-      $categoryTotal = $categories->sum('sarans_count');
-      $chartColors = ['#204F97', '#3667AC', '#477DBD', '#609CD0', '#78B3DF', '#92C6EB', '#AEDAF3'];
-      $chartSegments = [];
-      $chartAngle = -90;
-
-      foreach ($categories as $index => $category) {
-          if ($categoryTotal === 0 || $category->sarans_count === 0) {
-              continue;
-          }
-
-          $segmentEnd = $chartAngle + ($category->sarans_count / $categoryTotal * 360);
-          $segmentGap = min(1.5, ($segmentEnd - $chartAngle) / 2);
-          $chartSegments[] = $chartColors[$index % count($chartColors)] . " {$chartAngle}deg " . ($segmentEnd - $segmentGap) . 'deg';
-          $chartSegments[] = "#FFFFFF " . ($segmentEnd - $segmentGap) . "deg {$segmentEnd}deg";
-          $chartAngle = $segmentEnd;
-      }
-
-      $chartBackground = $chartSegments
-          ? 'conic-gradient(' . implode(', ', $chartSegments) . ')'
-          : '#EEF7FE';
-    @endphp
-
-    <div class="category-stats-card card border-0 rounded-4 shadow-sm bg-white p-4 p-lg-5" data-aos="fade-up">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="category-stats-title h5 font-display fw-bold mb-0" id="saran-statistics-title">Statistik Saran per Kategori</h2>
-        <span class="badge bg-light text-dark border">{{ $categories->count() }} Kategori</span>
-      </div>
-
-      <div
-        class="category-donut-chart mb-4"
-        role="img"
-        aria-label="Diagram donat saran berdasarkan kategori, total {{ number_format($categoryTotal) }} saran"
-        style="--category-chart: {{ $chartBackground }};"
-      ></div>
-
-      <div class="category-stats-list">
-        @foreach($categories as $category)
-          @php
-            $percentage = $categoryTotal > 0
-                ? round(($category->sarans_count / $categoryTotal) * 100)
-                : 0;
-          @endphp
-          <div class="category-stats-item">
-            <div class="d-flex justify-content-between align-items-center gap-3 mb-2">
-              <span class="category-stats-name">{{ $category->nama }}</span>
-              <span class="category-stats-value">{{ number_format($category->sarans_count) }} ({{ $percentage }}%)</span>
-            </div>
-            <div
-              class="category-progress"
-              role="progressbar"
-              aria-label="{{ $category->nama }}"
-              aria-valuenow="{{ $percentage }}"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-              <span class="category-progress-fill" style="width: {{ $percentage }}%;"></span>
-            </div>
-          </div>
-        @endforeach
-      </div>
-    </div>
   </div>
 </section>
 
 <!-- ============================================
      3 PILAR NILAI (Panel 1 Desain Bawah)
 ============================================ -->
-<section class="section-pad" id="features">
+<section class="section-pad home-content-section" id="features">
   <div class="container">
     <div class="row g-4">
       
@@ -398,7 +358,7 @@
 <!-- ============================================
      ALUR SISTEM (Panel 8 Desain)
 ============================================ -->
-<section class="section-pad bg-white" id="alur">
+<section class="section-pad home-content-section bg-white" id="alur">
   <div class="container">
     <div class="text-center mx-auto mb-5" style="max-width: 680px;" data-aos="fade-up">
       <span class="eyebrow"><i class="bi bi-signpost-split-fill"></i> Alur Pelayanan</span>
@@ -465,7 +425,7 @@
 <!-- ============================================
      KATEGORI SARAN
 ============================================ -->
-<section class="section-pad" id="kategori" style="background: var(--clr-bg);">
+<section class="section-pad home-content-section" id="kategori" style="background: var(--clr-bg);">
   <div class="container">
     <div class="text-center mx-auto mb-5" style="max-width: 680px;" data-aos="fade-up">
       <span class="eyebrow"><i class="bi bi-grid-fill"></i> Kategori Layanan</span>

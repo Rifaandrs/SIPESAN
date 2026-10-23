@@ -13,14 +13,14 @@ Berikut adalah daftar akun yang telah ditambahkan dan aktif untuk **role admin**
 
 ### 2. Akun Admin
 - **Username** : `Admin`
-- **Password** : `Admin123`
+- **Password** : `admin123`
 - **Role** : `admin`
 
 ---
 
 ### 3. Akun Admin 2
 - **Username** : `Admin 2`
-- **Password** : `admiN321`
+- **Password** : `admin321`
 - **Role** : `admin`
 
 ---

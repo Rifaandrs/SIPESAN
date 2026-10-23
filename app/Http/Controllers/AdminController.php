@@ -6,22 +6,58 @@ use App\Models\Category;
 use App\Models\Saran;
 use App\Models\SaranHistory;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     /**
      * Dashboard Utama Wakasek Humas (Desain Panel 5)
      */
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $totalSaran = Saran::count();
         $saranBaru = Saran::where('status', 'Baru')->count();
         $saranDiproses = Saran::whereIn('status', ['Diterima', 'Sedang Diverifikasi', 'Dalam Proses Tindak Lanjut'])->count();
         $saranSelesai = Saran::where('status', 'Selesai')->count();
         $saranDitolak = Saran::where('status', 'Ditolak')->count();
+
+        $trendPeriod = in_array((string) $request->query('period'), ['7', '30', '6', '12'], true)
+            ? (string) $request->query('period')
+            : '7';
+        $today = CarbonImmutable::today();
+        $isMonthlyTrend = in_array($trendPeriod, ['6', '12'], true);
+        $monthCount = (int) $trendPeriod;
+        $trendStart = $isMonthlyTrend
+            ? $today->startOfMonth()->subMonths($monthCount - 1)
+            : $today->subDays((int) $trendPeriod - 1);
+        $trendEnd = $today->endOfDay();
+        $driver = DB::connection()->getDriverName();
+        $periodExpression = match (true) {
+            $isMonthlyTrend && in_array($driver, ['mysql', 'mariadb'], true) => "DATE_FORMAT(created_at, '%Y-%m')",
+            $isMonthlyTrend && $driver === 'sqlite' => "strftime('%Y-%m', created_at)",
+            $isMonthlyTrend && $driver === 'pgsql' => "TO_CHAR(created_at, 'YYYY-MM')",
+            $isMonthlyTrend => throw new \RuntimeException("Tren bulanan tidak didukung untuk database {$driver}."),
+            default => 'DATE(created_at)',
+        };
+        $trendCounts = Saran::query()
+            ->selectRaw("{$periodExpression} as period, COUNT(*) as total")
+            ->whereBetween('created_at', [$trendStart, $trendEnd])
+            ->groupBy('period')
+            ->pluck('total', 'period');
+        $trendLabels = [];
+        $trendValues = [];
+        $trendIntervals = $isMonthlyTrend ? $monthCount : (int) $trendPeriod;
+
+        for ($index = 0; $index < $trendIntervals; $index++) {
+            $date = $isMonthlyTrend ? $trendStart->addMonths($index) : $trendStart->addDays($index);
+            $periodKey = $isMonthlyTrend ? $date->format('Y-m') : $date->format('Y-m-d');
+            $trendLabels[] = $isMonthlyTrend ? $date->format('M Y') : $date->format('d/m');
+            $trendValues[] = (int) ($trendCounts[$periodKey] ?? 0);
+        }
 
         // Statistik Saran per Kategori
         $categoriesStats = Category::withCount('sarans')->get();
@@ -35,6 +71,9 @@ class AdminController extends Controller
             'saranDiproses',
             'saranSelesai',
             'saranDitolak',
+            'trendPeriod',
+            'trendLabels',
+            'trendValues',
             'categoriesStats',
             'recentSarans'
         ));
@@ -47,7 +86,9 @@ class AdminController extends Controller
     {
         $query = Saran::with('category')->latest();
 
-        if ($request->filled('status')) {
+        if ($request->input('status') === 'Diproses') {
+            $query->whereIn('status', ['Diterima', 'Sedang Diverifikasi', 'Dalam Proses Tindak Lanjut']);
+        } elseif ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 

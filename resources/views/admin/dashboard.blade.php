@@ -30,7 +30,7 @@
   
   <!-- 1. Total Saran (Blue) -->
   <div class="col-sm-6 col-xl-3">
-    <div class="card card-stat border-0 shadow-sm p-4 h-100" style="border-left: 4px solid #2563eb !important;">
+    <a href="{{ route('admin.saran.index') }}" class="card card-stat dashboard-stat-link border-0 shadow-sm p-4 h-100" style="border-left: 4px solid #2563eb !important;" aria-label="Lihat semua saran, total {{ $totalSaran }}">
       <div class="d-flex align-items-center justify-content-between mb-2">
         <span class="stat-label text-primary fw-bold">Total Saran</span>
         <div class="p-2 bg-primary bg-opacity-10 text-primary rounded-3 fs-4">
@@ -39,12 +39,12 @@
       </div>
       <div class="stat-value text-dark fw-bold fs-2">{{ $totalSaran }}</div>
       <small class="text-muted">Semua saran pihak eksternal</small>
-    </div>
+    </a>
   </div>
 
   <!-- 2. Saran Baru (Orange) -->
   <div class="col-sm-6 col-xl-3">
-    <div class="card card-stat border-0 shadow-sm p-4 h-100" style="border-left: 4px solid #f97316 !important;">
+    <a href="{{ route('admin.saran.index', ['status' => 'Baru']) }}" class="card card-stat dashboard-stat-link border-0 shadow-sm p-4 h-100" style="border-left: 4px solid #f97316 !important;" aria-label="Lihat {{ $saranBaru }} saran baru">
       <div class="d-flex align-items-center justify-content-between mb-2">
         <span class="stat-label text-warning fw-bold">Saran Baru</span>
         <div class="p-2 bg-warning bg-opacity-10 text-warning rounded-3 fs-4">
@@ -53,12 +53,12 @@
       </div>
       <div class="stat-value text-dark fw-bold fs-2">{{ $saranBaru }}</div>
       <small class="text-warning fw-semibold">Menunggu verifikasi Humas</small>
-    </div>
+    </a>
   </div>
 
   <!-- 3. Diproses (Yellow/Amber) -->
   <div class="col-sm-6 col-xl-3">
-    <div class="card card-stat border-0 shadow-sm p-4 h-100" style="border-left: 4px solid #eab308 !important;">
+    <a href="{{ route('admin.saran.index', ['status' => 'Diproses']) }}" class="card card-stat dashboard-stat-link border-0 shadow-sm p-4 h-100" style="border-left: 4px solid #eab308 !important;" aria-label="Lihat {{ $saranDiproses }} saran yang sedang diproses">
       <div class="d-flex align-items-center justify-content-between mb-2">
         <span class="stat-label text-dark fw-bold">Diproses</span>
         <div class="p-2 bg-warning bg-opacity-25 text-dark rounded-3 fs-4">
@@ -67,12 +67,12 @@
       </div>
       <div class="stat-value text-dark fw-bold fs-2">{{ $saranDiproses }}</div>
       <small class="text-muted">Dalam tindak lanjut unit terkait</small>
-    </div>
+    </a>
   </div>
 
   <!-- 4. Selesai (Green) -->
   <div class="col-sm-6 col-xl-3">
-    <div class="card card-stat border-0 shadow-sm p-4 h-100" style="border-left: 4px solid #16a34a !important;">
+    <a href="{{ route('admin.saran.index', ['status' => 'Selesai']) }}" class="card card-stat dashboard-stat-link border-0 shadow-sm p-4 h-100" style="border-left: 4px solid #16a34a !important;" aria-label="Lihat {{ $saranSelesai }} saran selesai">
       <div class="d-flex align-items-center justify-content-between mb-2">
         <span class="stat-label text-success fw-bold">Selesai</span>
         <div class="p-2 bg-success bg-opacity-10 text-success rounded-3 fs-4">
@@ -81,7 +81,7 @@
       </div>
       <div class="stat-value text-dark fw-bold fs-2">{{ $saranSelesai }}</div>
       <small class="text-success fw-semibold">Telah ditindaklanjuti tuntas</small>
-    </div>
+    </a>
   </div>
 
 </div>
@@ -190,11 +190,80 @@
   </div>
 
 </div>
+
+<div class="card border-0 shadow-sm p-4 mt-4 bg-white">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+    <div>
+      <h5 class="card-title fw-bold font-display mb-1">Tren Saran Masuk</h5>
+      <span class="text-muted small">Pantau perubahan jumlah saran berdasarkan periode</span>
+    </div>
+    <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex align-items-center gap-2">
+      <label for="trend-period" class="small fw-semibold text-nowrap">Periode</label>
+      <select id="trend-period" name="period" class="form-select form-select-sm" aria-label="Pilih periode tren">
+        <option value="7" {{ $trendPeriod === '7' ? 'selected' : '' }}>7 hari</option>
+        <option value="30" {{ $trendPeriod === '30' ? 'selected' : '' }}>30 hari</option>
+        <option value="6" {{ $trendPeriod === '6' ? 'selected' : '' }}>6 bulan</option>
+        <option value="12" {{ $trendPeriod === '12' ? 'selected' : '' }}>12 bulan</option>
+      </select>
+      <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">Terapkan</button>
+    </form>
+  </div>
+  <div id="suggestion-trend-chart" role="img" aria-label="Grafik tren saran masuk"></div>
+</div>
 @endsection
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  const trendChartElement = document.getElementById('suggestion-trend-chart');
+  if (trendChartElement) {
+    const trendChart = new ApexCharts(trendChartElement, {
+      series: [{
+        name: 'Saran masuk',
+        data: @json($trendValues)
+      }],
+      chart: {
+        type: 'area',
+        height: 300,
+        toolbar: { show: false },
+        fontFamily: 'inherit',
+        zoom: { enabled: false }
+      },
+      colors: ['#204F97'],
+      dataLabels: { enabled: false },
+      stroke: { curve: 'smooth', width: 3 },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.3,
+          opacityTo: 0.04,
+          stops: [0, 90, 100]
+        }
+      },
+      markers: { size: 4, hover: { size: 6 } },
+      xaxis: {
+        categories: @json($trendLabels),
+        labels: { rotate: -35 }
+      },
+      yaxis: {
+        min: 0,
+        forceNiceScale: true,
+        decimalsInFloat: 0,
+        title: { text: 'Jumlah saran' }
+      },
+      tooltip: {
+        y: {
+          formatter: function (value) {
+            return value + ' saran';
+          }
+        }
+      },
+      noData: { text: 'Belum ada data pada periode ini' }
+    });
+    trendChart.render();
+  }
+
   const activeStats = @json($categoriesStats->where('sarans_count', '>', 0)->values());
   const categoriesData = activeStats.length > 0 
       ? activeStats.map(item => item.sarans_count) 

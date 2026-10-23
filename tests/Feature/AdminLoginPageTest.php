@@ -68,7 +68,7 @@ class AdminLoginPageTest extends TestCase
     {
         $response = $this->post(route('login'), [
             'username' => 'Admin 2',
-            'password' => 'admiN321',
+            'password' => 'admin321',
         ]);
 
         $response->assertRedirect(route('admin.dashboard'));
