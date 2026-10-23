@@ -26,5 +26,6 @@ Berikut adalah daftar akun yang telah ditambahkan dan aktif untuk **role admin**
 ---
 
 > **Catatan Login:**
-> 1. Form login panel admin (`/login`) menggunakan **Username** saja (tidak memakai email).
+> 1. Form login panel admin (`/login`) menggunakan **Username** saja.
 > 2. Penulisan **Username bersifat Case-Sensitive** (huruf besar dan kecil berpengaruh dan harus persis sesuai daftar di atas).
+> 3. Password harus minimal 8 karakter.

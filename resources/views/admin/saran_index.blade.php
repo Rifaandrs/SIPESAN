@@ -84,7 +84,7 @@
   </div>
 
   <div class="table-responsive">
-    <table class="table align-middle table-hover">
+    <table class="table admin-data-table align-middle table-hover">
       <thead class="table-light">
         <tr>
           <th>Kode</th>
@@ -104,16 +104,16 @@
             <div class="fw-semibold">{{ $s->nama_tampilan }}</div>
             <small class="badge bg-light text-dark border">{{ $s->status_pengirim }}</small>
           </td>
-          <td><span class="small">{{ $s->category->nama ?? '-' }}</span></td>
+          <td>{{ $s->category->nama ?? '-' }}</td>
           <td>{{ Str::limit($s->judul, 35) }}</td>
-          <td class="text-muted small">{{ $s->created_at->format('d/m/Y') }}</td>
+          <td class="text-muted">{{ $s->created_at->format('d/m/Y') }}</td>
           <td>
             <span class="badge rounded-pill px-3 py-1 {{ $s->status_badge_class }}">
               {{ $s->status }}
             </span>
           </td>
           <td>
-            <a href="{{ route('admin.saran.show', $s->id) }}" class="btn btn-sm btn-primary rounded-pill px-3">
+            <a href="{{ route('admin.saran.show', $s->id) }}" class="btn btn-sm btn-primary rounded-pill btn-saran-detail">
               Detail &amp; Tindak Lanjut
             </a>
           </td>

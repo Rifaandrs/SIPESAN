@@ -68,7 +68,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Laporan & Rekap Saran
     Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan.index');
 
-    // Manajemen Pengguna & Peran
-    Route::get('/pengguna', [AdminController::class, 'users'])->name('users');
-    Route::post('/pengguna/{user}/role', [AdminController::class, 'updateRole'])->name('users.updateRole');
+    // Profil Admin
+    Route::get('/profil', [AdminController::class, 'profile'])->name('profile');
+    Route::post('/profil', [AdminController::class, 'updateProfile'])->name('profile.update');
+    Route::delete('/profil/foto', [AdminController::class, 'removeProfilePhoto'])->name('profile.photo.destroy');
 });

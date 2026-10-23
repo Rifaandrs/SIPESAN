@@ -60,7 +60,7 @@
       <h5 class="fw-bold font-display mb-3">Daftar Kategori Tersedia</h5>
 
       <div class="table-responsive">
-        <table class="table align-middle">
+        <table class="table admin-data-table align-middle">
           <thead class="table-light">
             <tr>
               <th>No</th>

@@ -11,9 +11,14 @@
             </div>
         </a>
         
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Toggle navigation">
-            <i class="bi bi-list fs-2"></i>
-        </button>
+        <div class="d-flex align-items-center gap-2">
+            <button class="theme-toggle-btn d-lg-none" type="button" data-theme-toggle aria-label="Ganti ke tema gelap" title="Ganti ke tema gelap">
+                <i class="bi bi-moon-stars" data-theme-icon aria-hidden="true"></i>
+            </button>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Toggle navigation">
+                <i class="bi bi-list fs-2"></i>
+            </button>
+        </div>
 
         <div class="collapse navbar-collapse" id="navMenu">
             <!-- Nav Menu: Beranda, Saran, Cek Status -->
@@ -40,6 +45,9 @@
                 <a href="{{ route('login') }}" class="btn btn-nav-admin rounded-pill px-3 py-1 font-display fw-semibold">
                     <i class="bi bi-box-arrow-in-right me-1"></i> Login untuk Admin
                 </a>
+                <button class="theme-toggle-btn d-none d-lg-inline-flex ms-2" type="button" data-theme-toggle aria-label="Ganti ke tema gelap" title="Ganti ke tema gelap">
+                    <i class="bi bi-moon-stars" data-theme-icon aria-hidden="true"></i>
+                </button>
             </div>
         </div>
     </div>

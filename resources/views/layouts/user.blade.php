@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Beranda') - SIPESAN SMPN 2 Purwakarta</title>
     <meta name="description" content="SIPESAN - Sistem Pelayanan Saran Eksternal SMPN 2 Purwakarta">
+    <script>
+        try {
+            document.documentElement.dataset.theme = localStorage.getItem('sipesan-theme') === 'dark' ? 'dark' : 'light';
+        } catch (error) {
+            console.warn('Preferensi tema tidak dapat dibaca.', error);
+        }
+    </script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +32,7 @@
         .navbar-hw {
             position: sticky;
             top: 0;
-            background: #ffffff !important;
+            background: var(--clr-surface) !important;
             box-shadow: 0 2px 14px rgba(15, 23, 42, 0.08);
             padding: 12px 0;
             z-index: 1000;
@@ -92,6 +99,23 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 14px rgba(54, 103, 172, 0.25);
         }
+        .theme-toggle-btn {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 auto;
+            border: 1px solid var(--clr-primary);
+            border-radius: 50%;
+            background: transparent;
+            color: var(--clr-primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .theme-toggle-btn:hover {
+            background: var(--clr-primary);
+            color: #fff;
+        }
     </style>
 
     @stack('styles')
@@ -101,10 +125,12 @@
     <!-- ============================================
          PRELOADER
     ============================================ -->
-    <div id="preloader" aria-hidden="true">
-        <div class="preload-ring"><i class="bi bi-mortarboard-fill preload-heart"></i></div>
-        <div class="preload-text">SIPESAN SMPN 2 PURWAKARTA&hellip;</div>
-    </div>
+    @if (session('show_preloader') || request()->query('transition') === 'admin')
+        <div id="preloader" aria-hidden="true">
+            <div class="preload-ring"><i class="bi bi-mortarboard-fill preload-heart"></i></div>
+            <div class="preload-text">SIPESAN SMPN 2 PURWAKARTA&hellip;</div>
+        </div>
+    @endif
 
     <!-- Top Navbar Component (User) -->
     @include('layouts.partials.navbar_user')
@@ -127,6 +153,8 @@
     <script src="{{ asset('assets-user/bootstrap.bundle.min.js') }}"></script>
     <!-- AOS Animation -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ asset('assets/js/theme.js') }}"></script>
+    <script src="{{ asset('assets/js/preloader.js') }}"></script>
     <!-- Template Script -->
     <script src="{{ asset('assets-user/script.js') }}"></script>
 

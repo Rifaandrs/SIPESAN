@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin - SIPESAN</title>
+    <script>
+        try {
+            document.documentElement.dataset.theme = localStorage.getItem('sipesan-theme') === 'dark' ? 'dark' : 'light';
+        } catch (error) {
+            console.warn('Preferensi tema tidak dapat dibaca.', error);
+        }
+    </script>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/smpn-2-purwakarta-logo.png') }}">
@@ -17,9 +24,19 @@
 </head>
 <body>
 
+    @if (session('show_preloader'))
+        <div id="preloader" aria-hidden="true">
+            <div class="preload-ring"><i class="bi bi-mortarboard-fill preload-heart"></i></div>
+            <div class="preload-text">SIPESAN SMPN 2 PURWAKARTA&hellip;</div>
+        </div>
+    @endif
+
     <div class="login-wrapper">
         <div class="login-bg-shape login-bg-shape-1"></div>
         <div class="login-bg-shape login-bg-shape-2"></div>
+        <button class="login-theme-toggle" type="button" data-theme-toggle aria-label="Ganti ke tema gelap" title="Ganti ke tema gelap">
+            <i class="bi bi-moon-stars" data-theme-icon aria-hidden="true"></i>
+        </button>
         
         <div class="login-card">
             
@@ -131,6 +148,8 @@
 
     <!-- Scripts -->
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/theme.js') }}"></script>
+    <script src="{{ asset('assets/js/preloader.js') }}"></script>
     <script src="{{ asset('assets/js/auth.js') }}?v={{ filemtime(public_path('assets/js/auth.js')) }}"></script>
 </body>
 </html>

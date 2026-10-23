@@ -4,14 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ---------- AOS INIT ---------- */
     AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 80 });
 
-    /* ---------- PRELOADER ---------- */
-    var preloader = document.getElementById('preloader');
-    window.addEventListener('load', function () {
-        setTimeout(function () { preloader.classList.add('hide'); }, 400);
-    });
-    // fallback in case load already fired
-    setTimeout(function () { preloader.classList.add('hide'); }, 2500);
-
     /* ---------- SCROLL TO TOP + PROGRESS RING (set up first so onScroll can use it) ---------- */
     var scrollTopBtn = document.getElementById('scrollTop');
     var progressCircle = scrollTopBtn.querySelector('.progress');

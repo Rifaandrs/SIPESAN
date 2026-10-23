@@ -8,6 +8,7 @@ use App\Models\SaranHistory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -174,25 +175,66 @@ class AdminController extends Controller
     }
 
     /**
-     * Kelola Pengguna & Role (Wakasek Humas vs Pihak Eksternal)
+     * Lihat Profil Admin
      */
-    public function users()
+    public function profile()
     {
-        $users = User::latest()->paginate(10);
-        return view('admin.users', compact('users'));
+        return view('admin.profile', ['user' => Auth::user()]);
     }
 
     /**
-     * Ubah Role Pengguna
+     * Update Profil Admin
      */
-    public function updateRole(Request $request, User $user)
+    public function updateProfile(Request $request)
     {
-        $request->validate([
-            'role' => ['required', 'in:admin,user'],
-        ]);
+        $user = Auth::user();
 
-        $user->update(['role' => $request->role]);
+        $rules = [
+            'name'  => ['required', 'string', 'max:255'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ];
 
-        return back()->with('success', "Peran pengguna {$user->name} berhasil diperbarui.");
+        if ($request->filled('password')) {
+            $rules['password']              = ['min:8', 'confirmed'];
+            $rules['password_confirmation'] = ['required'];
+        }
+
+        $request->validate($rules);
+
+        $data = [
+            'name' => $request->name,
+        ];
+
+        // Proses upload foto jika ada
+        if ($request->hasFile('photo')) {
+            // Hapus foto lama jika ada
+            if ($user->photo && \Storage::disk('public')->exists($user->photo)) {
+                \Storage::disk('public')->delete($user->photo);
+            }
+            $data['photo'] = $request->file('photo')->store('profile_photos', 'public');
+        }
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return back()->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    /**
+     * Hapus foto profil dan gunakan avatar default.
+     */
+    public function removeProfilePhoto()
+    {
+        $user = Auth::user();
+
+        if ($user->photo) {
+            \Storage::disk('public')->delete($user->photo);
+            $user->update(['photo' => null]);
+        }
+
+        return back()->with('success', 'Foto profil dihapus. Avatar default sekarang digunakan.');
     }
 }

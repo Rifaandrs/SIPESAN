@@ -6,14 +6,10 @@
 <!-- START: Header Banner Sesuai Desain Panel 5 -->
 <div class="page-header">
   <div>
-    <h1 class="page-title">Dashboard</h1>
+    <h1 class="page-title">Dasbor</h1>
     <p class="page-subtitle">Selamat datang, <strong>{{ Auth::user()->name ?? 'Wakasek Humas' }}</strong> (Admin)</p>
   </div>
   <div class="d-flex gap-2">
-    <a href="{{ route('user.home') }}" target="_blank" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 rounded-pill px-3">
-      <i class="bi bi-box-arrow-up-right"></i>
-      <span>Tampilan Depan (User)</span>
-    </a>
     <a href="{{ route('admin.saran.index') }}" class="btn btn-primary btn-sm d-flex align-items-center gap-1 rounded-pill px-3">
       <i class="bi bi-chat-left-text-fill"></i>
       <span>Kelola Saran</span>
@@ -139,7 +135,7 @@
       </div>
 
       <div class="table-responsive">
-        <table class="table align-middle table-hover">
+        <table class="table admin-data-table align-middle table-hover">
           <thead class="table-light">
             <tr>
               <th>Kode</th>
@@ -161,18 +157,18 @@
                 <small class="text-muted">{{ $rs->status_pengirim }}</small>
               </td>
               <td>
-                <span class="small">{{ $rs->category->nama ?? '-' }}</span>
+                {{ $rs->category->nama ?? '-' }}
               </td>
-              <td class="text-muted small">
+              <td class="text-muted">
                 {{ $rs->created_at->format('d/m/y') }}
               </td>
               <td>
-                <span class="badge rounded-pill px-2 py-1 {{ $rs->status_badge_class }}">
+                <span class="badge rounded-pill {{ $rs->status_badge_class }}">
                   {{ $rs->status }}
                 </span>
               </td>
               <td>
-                <a href="{{ route('admin.saran.show', $rs->id) }}" class="btn btn-sm btn-primary rounded-pill px-2 py-0" style="font-size: 0.75rem;">
+                <a href="{{ route('admin.saran.show', $rs->id) }}" class="btn btn-sm btn-primary rounded-pill btn-saran-detail">
                   Detail
                 </a>
               </td>
@@ -187,10 +183,7 @@
       </div>
 
       @if($recentSarans->hasPages())
-        <div class="mt-3 pt-2 border-top d-flex flex-wrap justify-content-between align-items-center small text-muted">
-          <div>Menampilkan {{ $recentSarans->firstItem() }} - {{ $recentSarans->lastItem() }} dari {{ $recentSarans->total() }} saran</div>
-          <div>{{ $recentSarans->links() }}</div>
-        </div>
+        {{ $recentSarans->links() }}
       @endif
 
     </div>

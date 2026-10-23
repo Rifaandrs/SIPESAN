@@ -84,6 +84,7 @@ class AuthController extends Controller
         Cookie::queue(Cookie::forget('remembered_username'));
 
         return redirect()->route('admin.dashboard')
+            ->with('show_preloader', true)
             ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
     }
 
@@ -143,6 +144,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Anda telah berhasil keluar dari sistem.');
+        return redirect()->route('login')
+            ->with('success', 'Anda telah berhasil keluar dari sistem.');
     }
 }

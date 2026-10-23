@@ -192,19 +192,19 @@
         <i class="bi bi-clock-history me-1"></i> Riwayat Status
       </h6>
 
-      <div class="timeline-stepper ps-3 position-relative" style="border-left: 2px solid #e2e8f0; margin-left: 8px;">
+      <div class="timeline-stepper ps-3 position-relative status-history-list">
         @forelse($saran->histories as $hist)
-          <div class="position-relative pb-3 ps-3">
-            <div class="position-absolute" style="left: -23px; top: 2px;">
-              <span class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 16px; height: 16px; font-size: 0.55rem;">
+          <div class="position-relative pb-3 ps-3 status-history-item">
+            <div class="position-absolute status-history-marker">
+              <span class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm">
                 <i class="bi bi-check"></i>
               </span>
             </div>
-            <div class="d-flex justify-content-between">
-              <span class="fw-bold small">{{ $hist->status }}</span>
-              <span class="text-muted" style="font-size: 0.7rem;">{{ $hist->created_at->format('d/m/Y H:i') }}</span>
+            <div class="d-flex flex-wrap justify-content-between align-items-baseline gap-1 status-history-heading">
+              <span class="fw-semibold">{{ $hist->status }}</span>
+              <time class="text-muted" datetime="{{ $hist->created_at->toIso8601String() }}">{{ $hist->created_at->format('d/m/Y H:i') }}</time>
             </div>
-            <p class="text-muted small mb-0">{{ $hist->catatan }}</p>
+            <p class="text-muted mb-0 status-history-note">{{ $hist->catatan }}</p>
           </div>
         @empty
           <span class="text-muted small">Belum ada catatan riwayat.</span>
